@@ -1,0 +1,30 @@
+[project]
+name = "domain_scanner"
+version = "0.1.0"
+description = "domain_scanner using crewAI"
+authors = [{ name = "Your Name", email = "you@example.com" }]
+requires-python = ">=3.10,<3.14"
+dependencies = [
+    "crewai[tools]==1.11.0",
+    "litellm>=1.82.5",
+]
+
+[project.scripts]
+domain_scanner = "domain_scanner.main:run"
+run_crew = "domain_scanner.main:run"
+train = "domain_scanner.main:train"
+replay = "domain_scanner.main:replay"
+test = "domain_scanner.main:test"
+run_with_trigger = "domain_scanner.main:run_with_trigger"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.crewai]
+type = "crew"
+
+[tool.uv]
+required-environments = [
+  "sys_platform == 'win32' and platform_machine == 'AMD64'"
+]
