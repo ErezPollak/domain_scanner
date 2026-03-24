@@ -5,8 +5,10 @@ description = "domain_scanner using crewAI"
 authors = [{ name = "Your Name", email = "you@example.com" }]
 requires-python = ">=3.10,<3.14"
 dependencies = [
-    "crewai[tools]==1.11.0",
+    "crewai[google-genai,tools]==1.11.0",
+    "dnspython>=2.8.0",
     "litellm>=1.82.5",
+    "wappalyzer>=1.0.20",
 ]
 
 [project.scripts]

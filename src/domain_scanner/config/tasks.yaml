@@ -1,17 +1,233 @@
-research_task:
+reconnaissance_task:
   description: >
-    Conduct a thorough research about {topic}
-    Make sure you find any interesting and relevant information given
-    the current year is {current_year}.
-  expected_output: >
-    A list with 10 bullet points of the most relevant information about {topic}
-  agent: researcher
+    Perform external reconnaissance on the web service {domain}.
+    Identify DNS records, IP addresses, and publicly visible
+    subdomains associated with the domain.
 
-reporting_task:
-  description: >
-    Review the context you got and expand each topic into a full section for a report.
-    Make sure the report is detailed and contains any and all relevant information.
+    Investigate network indicators that reveal exposed services
+    or infrastructure components.
+
+    Your goal is to produce an accurate map of the publicly
+    visible assets belonging to {domain}. This information
+    will serve as the foundation for deeper analysis performed
+    by other agents in the workflow.
+
   expected_output: >
-    A fully fledged report with the main topics, each with a full section of information.
-    Formatted as markdown without '```'
-  agent: reporting_analyst
+    A markdown report with the following sections:
+
+    1. Domain analyzed
+    2. DNS records discovered
+    3. IP addresses associated with the domain
+    4. List of discovered subdomains
+    5. Observed exposed services or infrastructure indicators
+
+  agent: recon_agent
+  async_execution: true
+
+
+tech_stack_analysis_task:
+  description: >
+    Analyze the web service at {domain} to determine the
+    technologies used in its implementation.
+
+    Use the reconnaissance results to identify reachable
+    hosts and endpoints that may reveal technology signals.
+
+    Inspect HTTP headers, scripts, HTML metadata, and network
+    responses to identify frontend frameworks, backend
+    technologies, web servers, CDNs, and third-party services.
+
+  expected_output: >
+    A markdown report with the following sections:
+
+    1. Frontend technologies detected
+    2. Backend technologies or frameworks
+    3. Web server and hosting technologies
+    4. CDN or content delivery services
+    5. Third-party integrations or analytics tools
+
+  agent: tech_stack_agent
+
+  context:
+    - reconnaissance_task
+
+
+infrastructure_analysis_task:
+  description: >
+    Determine how the web service {domain} is deployed
+    and hosted.
+
+    Use the reconnaissance data and detected technologies
+    to analyze the hosting environment and infrastructure.
+
+    Evaluate IP ownership, TLS certificates, network routing
+    patterns, and CDN indicators to infer cloud providers,
+    hosting environments, and infrastructure architecture.
+
+  expected_output: >
+    A markdown report containing:
+
+    1. Hosting provider or cloud platform
+    2. CDN or edge delivery provider
+    3. TLS certificate details and configuration
+    4. Network infrastructure observations
+    5. Inferred deployment architecture
+
+  agent: infrastructure_agent
+
+  context:
+    - reconnaissance_task
+    - tech_stack_analysis_task
+
+
+security_analysis_task:
+  description: >
+    Evaluate the security posture of the web service {domain}.
+
+    Use the reconnaissance, technology stack analysis, and
+    infrastructure findings to identify potential vulnerabilities,
+    insecure configurations, exposed endpoints, and outdated
+    technologies.
+
+    Pay particular attention to missing HTTP security headers,
+    exposed services, and technologies known to have security risks.
+
+  expected_output: >
+    A markdown security assessment report with:
+
+    1. List of identified security issues
+    2. Severity classification (Low / Medium / High)
+    3. Explanation of each vulnerability or risk
+    4. Potential impact of the issue
+    5. Suggested mitigation or improvement
+
+  agent: security_agent
+
+  context:
+    - reconnaissance_task
+    - tech_stack_analysis_task
+    - infrastructure_analysis_task
+
+
+performance_analysis_task:
+  description: >
+    Evaluate the performance characteristics of the web
+    service {domain}.
+
+    Use the detected infrastructure and technologies to
+    understand how the system delivers content.
+
+    Analyze response behavior, caching headers, compression
+    usage, and asset sizes to identify inefficiencies that
+    could impact loading speed, scalability, or user
+    experience.
+
+  expected_output: >
+    A markdown performance report including:
+
+    1. Observed response behavior
+    2. Caching configuration analysis
+    3. Compression usage evaluation
+    4. Large or inefficient resources
+    5. Recommendations for optimization
+
+  agent: performance_agent
+
+  context:
+    - tech_stack_analysis_task
+    - infrastructure_analysis_task
+
+
+website_content_analysis_task:
+  description: >
+    Retrieve the HTML content of the web service {domain} and analyze
+    its structure and main content.
+
+    Extract key headings, paragraphs, metadata, and any other
+    significant information that represents how the site communicates
+    with its users.
+
+    This output will support other agents in understanding the site
+    layout, main content focus, and information exposure.
+  expected_output: >
+    A markdown report with the following sections:
+    1. Main headings (h1–h3)
+    2. Key paragraphs / textual content
+    3. Metadata (title, description, keywords)
+    4. Notes about site structure (e.g., sections, navigation)
+  agent: website_content_agent
+
+
+ux_ui_analysis_task:
+  description: >
+    Evaluate the user experience and interface design of the web
+    service {domain}.
+
+    Consider navigation clarity, visual hierarchy, accessibility,
+    responsiveness, and overall convenience for users. Provide
+    clear recommendations for improvements.
+
+  expected_output: >
+    A markdown report with the following sections:
+    1. Navigation and layout clarity
+    2. Accessibility observations
+    3. Responsiveness and interactive elements
+    4. Overall UX rating (Good / Average / Poor)
+    5. Recommendations for improving user experience
+
+  agent: ux_ui_agent
+  context:
+    - website_content_analysis_task
+
+
+report_generation_task:
+  description: >
+    Produce the final comprehensive analysis report for the
+    web service {domain}.
+
+    Combine the outputs from all previous agents: reconnaissance,
+    tech stack, infrastructure, security, performance,
+    website content, and UX/UI evaluation. Highlight key insights
+    and recommendations in a structured report.
+
+  expected_output: >
+    A final markdown report structured as follows:
+
+    # Web Service Analysis Report: {domain}
+
+    ## Executive Summary
+    Key findings and overall assessment.
+
+    ## Infrastructure Overview
+    Summary of hosting environment and deployment architecture.
+
+    ## Technology Stack
+    Identified frameworks, servers, and integrations.
+
+    ## Security Assessment
+    List of vulnerabilities, severity levels, and risk analysis.
+
+    ## Performance Evaluation
+    Observations on response behavior and optimization opportunities.
+
+    ## Website Content Analysis
+    Key headings, paragraphs, metadata, and content structure.
+
+    ## UX/UI Evaluation
+    Usability, navigation clarity, accessibility, and overall convenience
+    rating, including actionable recommendations.
+
+    ## Recommendations
+    Practical improvements for security, performance, content, and UX.
+
+  agent: report_agent
+  context:
+    - reconnaissance_task
+    - tech_stack_analysis_task
+    - infrastructure_analysis_task
+    - security_analysis_task
+    - performance_analysis_task
+    - website_content_analysis_task
+    - ux_ui_analysis_task
+
+  output_file: reports/{domain}_report.md
