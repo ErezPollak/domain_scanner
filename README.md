@@ -1,54 +1,74 @@
-# DomainScanner Crew
+# DomainScanner – AI-Powered Web Analysis Tool
 
-Welcome to the DomainScanner Crew project, powered by [crewAI](https://crewai.com). This template is designed to help you set up a multi-agent AI system with ease, leveraging the powerful and flexible framework provided by crewAI. Our goal is to enable your agents to collaborate effectively on complex tasks, maximizing their collective intelligence and capabilities.
+**DomainScanner** is an advanced multi-agent system built with [CrewAI](https://www.crewai.com) designed to perform **comprehensive analysis of web services**.  
+It leverages AI agents, and specialized tools to evaluate **security, technology, performance, UX/UI, and metadata**.
 
-## Installation
+---
 
-Ensure you have Python >=3.10 <3.14 installed on your system. This project uses [UV](https://docs.astral.sh/uv/) for dependency management and package handling, offering a seamless setup and execution experience.
+## Overview
 
-First, if you haven't already, install uv:
+DomainScanner is designed to replace manual auditing with an **automated, intelligent workflow**. Each component of the system is focused on a specific domain of web analysis:
 
-```bash
-pip install uv
-```
+- **Infrastructure & DNS** – Maps domain IPs, discovers subdomains, and detects potential entry points.
+- **Security Analysis** – Evaluates HTTP security headers, SSL/TLS certificates, and web server configurations.
+- **Tech Stack Detection** – Automatically identifies frameworks, CMS platforms, libraries, and hosting technologies using Wappalyzer.
+- **UX/UI Evaluation** – Provides AI-driven usability assessments, highlighting areas where navigation or design can be improved.
+- **Performance & Reliability** – Measures latency, response times, and content delivery efficiency.
+- **SEO & Metadata Inspection** – Extracts titles, meta descriptions, headings, sitemap, and robots.txt rules.
+- **Automated Reporting** – Consolidates all findings into a clear, structured Markdown report for easy review.
 
-Next, navigate to your project directory and install the dependencies:
+---
 
-(Optional) Lock the dependencies and install them by using the CLI command:
-```bash
-crewai install
-```
-### Customizing
+## Key Features
 
-**Add your `OPENAI_API_KEY` into the `.env` file**
+1. **AI-Powered UX/UI Agent**  
+   - Evaluates usability, navigation clarity, and user convenience.  
+   - Provides actionable feedback on site design and accessibility.
 
-- Modify `src/domain_scanner/config/agents.yaml` to define your agents
-- Modify `src/domain_scanner/config/tasks.yaml` to define your tasks
-- Modify `src/domain_scanner/crew.py` to add your own logic, tools and specific args
-- Modify `src/domain_scanner/main.py` to add custom inputs for your agents and tasks
+2. **Advanced Security Toolset**  
+   - Improved detection of missing or misconfigured HTTP headers.  
+   - Enhanced SSL/TLS certificate inspection for real-world security auditing.
 
-## Running the Project
+3. **Full Domain Crawl with Parallel Fetching**  
+   - Fetches multiple pages concurrently to map internal links efficiently.  
+   - Limits requests to avoid overload while providing comprehensive coverage.
 
-To kickstart your crew of AI agents and begin task execution, run this from the root folder of your project:
+4. **Tech Stack Analysis Enhancements**  
+   - Integrates Wappalyzer for detailed detection of frameworks, CMS, and server technologies.  
+   - Provides insights into software versions, enabling better risk assessment.
 
-```bash
-$ crewai run
-```
+5. **Metadata & SEO Improvements**  
+   - Extracts structured headings, meta tags, sitemap.xml, and robots.txt rules.  
+   - Highlights SEO issues or accessibility concerns.
 
-This command initializes the domain_scanner Crew, assembling the agents and assigning them tasks as defined in your configuration.
+6. **Automated, Domain-Named Reporting**  
+   - Each scan generates a Markdown report named after the target domain.  
+   - Structured with clear sections: Infrastructure, Security, Tech Stack, UX/UI, Performance, and SEO.
 
-This example, unmodified, will run the create a `report.md` file with the output of a research on LLMs in the root folder.
+7. **Extensible Agent & Tool Framework**  
+   - Agents can be easily customized or extended.  
+   - Tools are modular, allowing future integration of new analysis capabilities.
 
-## Understanding Your Crew
+---
 
-The domain_scanner Crew is composed of multiple AI agents, each with unique roles, goals, and tools. These agents collaborate on a series of tasks, defined in `config/tasks.yaml`, leveraging their collective skills to achieve complex objectives. The `config/agents.yaml` file outlines the capabilities and configurations of each agent in your crew.
+## Benefits
 
-## Support
+- **Automated Efficiency** – Reduces manual effort and human error in domain audits.  
+- **Comprehensive Coverage** – Combines security, UX/UI, performance, and SEO in one scan.  
+- **Professional Reporting** – Outputs structured, actionable reports suitable for internal review or client presentation.  
+- **Modular & Extensible** – New tools and agents can be added as requirements evolve.  
+- **AI-Powered Insights** – Uses specialized agents to provide intelligent evaluations beyond simple checks.
 
-For support, questions, or feedback regarding the DomainScanner Crew or crewAI.
-- Visit our [documentation](https://docs.crewai.com)
-- Reach out to us through our [GitHub repository](https://github.com/joaomdmoura/crewai)
-- [Join our Discord](https://discord.com/invite/X4JWnZnxPb)
-- [Chat with our docs](https://chatg.pt/DWjSBZn)
+---
 
-Let's create wonders together with the power and simplicity of crewAI.
+## Version Highlights
+
+- **v2.0** introduces the **UX/UI analysis agent** and **enhanced report generation**.  
+- **Improved concurrency** for website crawling, reducing scan times without sacrificing thoroughness.  
+- **Better error handling** in tools, ensuring robustness against unreachable pages or malformed responses.  
+- **Expanded toolset** including `robots.txt` and `sitemap.xml` analysis.  
+- Fully aligned **agent specialization**: each agent now has a clear role, goal, and backstory for higher quality outputs.
+
+---
+
+DomainScanner represents a **professional-grade, AI-driven approach to web service analysis**, combining the efficiency of automation with the insight of human-like evaluation.

@@ -1,63 +1,187 @@
 from crewai import Agent, Crew, Process, Task
-from crewai.project import CrewBase, agent, crew, task
-from crewai.agents.agent_builder.base_agent import BaseAgent
-# If you want to run a snippet of code before or after the crew starts,
-# you can use the @before_kickoff and @after_kickoff decorators
-# https://docs.crewai.com/concepts/crews#example-crew-class-with-decorators
+from crewai.project import CrewBase, agent, task, crew
+from crewai.tasks.task_output import TaskOutput
+
+# Import all custom tools
+from domain_scanner.tools.domain_tools import (
+    dns_lookup,
+    fetch_website,
+    security_headers,
+    extract_metadata,
+    detect_tech_stack,
+    discover_subdomains,
+    analyze_ssl_certificate,
+    crawl_website,
+    measure_performance,
+    analyze_sitemap,
+    analyze_robots
+)
+
 
 @CrewBase
 class DomainScanner:
-    """DomainScanner crew"""
+    """AI Crew for analyzing and scanning a web domain"""
 
-    agents: list[BaseAgent]
+    agents: list[Agent]
     tasks: list[Task]
 
-    # Learn more about YAML configuration files here:
-    # Agents: https://docs.crewai.com/concepts/agents#yaml-configuration-recommended
-    # Tasks: https://docs.crewai.com/concepts/tasks#yaml-configuration-recommended
-    
-    # If you would like to add tools to your agents, you can learn more about it here:
-    # https://docs.crewai.com/concepts/agents#agent-tools
+    # -------------------------------------------------
+    # Agents
+    # -------------------------------------------------
+
     @agent
-    def researcher(self) -> Agent:
+    def recon_agent(self) -> Agent:
         return Agent(
-            config=self.agents_config['researcher'], # type: ignore[index]
+            config=self.agents_config["recon_agent"],
+            tools=[
+                analyze_robots,
+                dns_lookup,
+                discover_subdomains
+            ],
             verbose=True
         )
 
     @agent
-    def reporting_analyst(self) -> Agent:
+    def tech_stack_agent(self) -> Agent:
         return Agent(
-            config=self.agents_config['reporting_analyst'], # type: ignore[index]
+            config=self.agents_config["tech_stack_agent"],
+            tools=[
+                fetch_website,
+                detect_tech_stack
+            ],
             verbose=True
         )
 
-    # To learn more about structured task outputs,
-    # task dependencies, and task callbacks, check out the documentation:
-    # https://docs.crewai.com/concepts/tasks#overview-of-a-task
+    @agent
+    def infrastructure_agent(self) -> Agent:
+        return Agent(
+            config=self.agents_config["infrastructure_agent"],
+            tools=[
+                dns_lookup,
+                analyze_ssl_certificate
+            ],
+            verbose=True
+        )
+
+    @agent
+    def security_agent(self) -> Agent:
+        return Agent(
+            config=self.agents_config["security_agent"],
+            tools=[
+                security_headers,
+                analyze_ssl_certificate
+            ],
+            verbose=True
+        )
+
+    @agent
+    def performance_agent(self) -> Agent:
+        return Agent(
+            config=self.agents_config["performance_agent"],
+            tools=[
+                measure_performance
+            ],
+            verbose=True
+        )
+
+    @agent
+    def website_content_agent(self) -> Agent:
+        return Agent(
+            config=self.agents_config["website_content_agent"],
+            tools=[
+                analyze_robots,
+                analyze_sitemap,
+                fetch_website,
+                extract_metadata,
+                crawl_website
+            ],
+            verbose=True
+        )
+
+    @agent
+    def ux_ui_agent(self) -> Agent:
+        return Agent(
+            config=self.agents_config["ux_ui_agent"],
+            tools=[
+                analyze_sitemap,
+                fetch_website,
+                extract_metadata,
+                crawl_website
+            ],
+            verbose=True
+        )
+
+    @agent
+    def report_agent(self) -> Agent:
+        return Agent(
+            config=self.agents_config["report_agent"],
+            verbose=True
+        )
+
+    # -------------------------------------------------
+    # Tasks
+    # -------------------------------------------------
+
     @task
-    def research_task(self) -> Task:
+    def reconnaissance_task(self) -> Task:
         return Task(
-            config=self.tasks_config['research_task'], # type: ignore[index]
+            config=self.tasks_config["reconnaissance_task"]
         )
 
     @task
-    def reporting_task(self) -> Task:
+    def tech_stack_analysis_task(self) -> Task:
         return Task(
-            config=self.tasks_config['reporting_task'], # type: ignore[index]
-            output_file='report.md'
+            config=self.tasks_config["tech_stack_analysis_task"]
         )
+
+    @task
+    def infrastructure_analysis_task(self) -> Task:
+        return Task(
+            config=self.tasks_config["infrastructure_analysis_task"]
+        )
+
+    @task
+    def security_analysis_task(self) -> Task:
+        return Task(
+            config=self.tasks_config["security_analysis_task"]
+        )
+
+    @task
+    def performance_analysis_task(self) -> Task:
+        return Task(
+            config=self.tasks_config["performance_analysis_task"]
+        )
+
+    @task
+    def website_content_analysis_task(self) -> Task:
+        return Task(
+            config=self.tasks_config["website_content_analysis_task"]
+        )
+
+    @task
+    def ux_ui_analysis_task(self) -> Task:
+        return Task(
+            config=self.tasks_config["ux_ui_analysis_task"]
+        )
+
+
+    @task
+    def report_generation_task(self) -> Task:
+        return Task(
+            config=self.tasks_config["report_generation_task"]
+        )
+
+    # -------------------------------------------------
+    # Crew
+    # -------------------------------------------------
 
     @crew
     def crew(self) -> Crew:
         """Creates the DomainScanner crew"""
-        # To learn how to add knowledge sources to your crew, check out the documentation:
-        # https://docs.crewai.com/concepts/knowledge#what-is-knowledge
 
         return Crew(
-            agents=self.agents, # Automatically created by the @agent decorator
-            tasks=self.tasks, # Automatically created by the @task decorator
+            agents=self.agents,
+            tasks=self.tasks,
             process=Process.sequential,
-            verbose=True,
-            # process=Process.hierarchical, # In case you wanna use that instead https://docs.crewai.com/how-to/Hierarchical/
+            verbose=True
         )
