@@ -1,3 +1,4 @@
+import os
 import sys
 import warnings
 
@@ -5,12 +6,15 @@ from domain_scanner.crew import DomainScanner
 
 warnings.filterwarnings("ignore", category=SyntaxWarning, module="pysbd")
 
+def get_target_domain():
+    return os.getenv("TARGET_DOMAIN", "example.com")
+
 def run():
     """
     Run the crew.
     """
     inputs = {
-        'domain': 'challenge-group.com'
+        'domain': get_target_domain()
     }
 
     try:
@@ -24,7 +28,7 @@ def train():
     Train the crew for a given number of iterations.
     """
     inputs = {
-        'domain': 'example.com'
+        'domain': get_target_domain()
     }
     try:
         DomainScanner().crew().train(n_iterations=int(sys.argv[1]), filename=sys.argv[2], inputs=inputs)
@@ -49,7 +53,7 @@ def test():
     Test the crew execution and returns the results.
     """
     inputs = {
-        'domain': 'example.com'
+        'domain': get_target_domain()
     }
 
     try:

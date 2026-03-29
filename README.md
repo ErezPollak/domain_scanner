@@ -117,24 +117,22 @@ To run the DomainScanner crew locally, you need to execute the main script that 
 >
 > Specifying models that lack robust tool execution capabilities (like `gpt-3.5-turbo` or small local models like `llama3` without proper routing) will result in unpredictable behavior or immediate agent failure!
 
-3. **Set the Target Domain (`main.py`):**
-   Before running the crew, you must edit the input parameters directly inside `src/domain_scanner/main.py`. Locate the `run()` function (and optionally the other functions like `test()` and `train()`) and change the target domain string:
-   ```python
-   def run():
-       inputs = {
-           'domain': 'your-target-domain.com'
-       }
-       # ...
+3. **Run the Crew via CLI (Recommended):**
+   We have included a dedicated command-line interface for local use. Run the scanner using the built-in `scan` command and pass your target domain as an argument:
+   ```bash
+   uv run scan --domain "your-target-domain.com"
    ```
 
-4. **Run the Crew:**
-   Run the scanner by using the provided `uv` script alias:
+   **Using Environment Variables (Cloud Native / CrewAI AMP):**
+   Alternatively, if you are running the native CrewAI scripts directly or deploying to the cloud (CrewAI AMP), the `main.py` entrypoint is completely configuration-driven. It reads from standard environment variables, requiring zero code modification. 
+   
+   Run it seamlessly by injecting the `TARGET_DOMAIN` variable:
    ```bash
-   uv run run_crew
-   ```
-   Or manually specifying the script:
-   ```bash
-   uv run domain_scanner
+   # Linux / macOS
+   TARGET_DOMAIN="your-target-domain.com" uv run run_crew
+
+   # Windows (PowerShell)
+   $env:TARGET_DOMAIN="your-target-domain.com"; uv run run_crew
    ```
 
 ---

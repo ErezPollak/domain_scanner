@@ -16,6 +16,7 @@ dependencies = [
 [project.scripts]
 domain_scanner = "domain_scanner.main:run"
 run_crew = "domain_scanner.main:run"
+scan = "domain_scanner.cli:main"
 train = "domain_scanner.main:train"
 replay = "domain_scanner.main:replay"
 test = "domain_scanner.main:test"
