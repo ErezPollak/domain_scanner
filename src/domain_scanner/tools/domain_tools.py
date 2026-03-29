@@ -5,14 +5,15 @@ from concurrent.futures import ThreadPoolExecutor
 from urllib.parse import urljoin, urlparse
 
 import requests
-from wappalyzer import analyze
 from bs4 import BeautifulSoup
 from crewai.tools import tool
+import wappalyzer
 
 
 # ------------------------------------------------
 # DNS LOOKUP
 # ------------------------------------------------
+
 
 @tool("DNS Lookup")
 def dns_lookup(domain: str) -> str:
@@ -39,45 +40,63 @@ def dns_lookup(domain: str) -> str:
         ip = socket.gethostbyname(domain)
         return f"{domain} -> {ip}"
     except Exception as e:
-        return str(e)
+        return f"TOOL_ERROR: {str(e)}"
 
 
 # ------------------------------------------------
 # SUBDOMAIN DISCOVERY
 # ------------------------------------------------
 
-COMMON_SUBDOMAINS = [
-    "www", "mail", "ftp", "admin", "blog", "dev", "test", "api", "staging"
-]
-
 
 @tool("Subdomain Discovery")
-def discover_subdomains(domain: str) -> str:
+def discover_subdomains(domain: str, subdomains: list[str]) -> str:
     """
     Discover common subdomains for a given domain.
 
     TOOL INPUT FORMAT:
-    {"domain": "example.com"}
+    {
+        "domain": "example.com",
+        "subdomains": ["www", "api", "mail"]
+    }
+
+    PARAMETER INSTRUCTIONS:
+    - The "subdomains" parameter must be a list of common subdomain prefixes.
+    - Generate 50–100 likely subdomains used in modern infrastructure.
+
+    Include categories such as:
+    - Web: www, blog, site
+    - APIs: api, gateway
+    - Infrastructure: cdn, assets, static
+    - Authentication: auth, oauth, login
+    - Email: mail, smtp, imap
+    - Dev environments: dev, test, staging
+    - Admin panels: admin, dashboard, console
+    - Monitoring: status, metrics, grafana
 
     RULES:
     - Provide only the base domain.
     - Do NOT include protocols like https://.
-    - Do NOT add extra fields.
+    - Subdomains must be prefixes only (no full hostnames).
 
     Example:
-    {"domain": "example.com"}
+    {
+        "domain": "example.com",
+        "subdomains": ["www", "api", "dev", "mail"]
+    }
 
     Returns:
     A newline-separated list of discovered subdomains.
     """
+
     found = []
 
-    for sub in COMMON_SUBDOMAINS:
+    for sub in subdomains:
         host = f"{sub}.{domain}"
+
         try:
             socket.gethostbyname(host)
             found.append(host)
-        except:
+        except Exception:
             pass
 
     if not found:
@@ -89,6 +108,7 @@ def discover_subdomains(domain: str) -> str:
 # ------------------------------------------------
 # FETCH WEBSITE
 # ------------------------------------------------
+
 
 @tool("Fetch Website HTML")
 def fetch_website(domain: str) -> str:
@@ -113,7 +133,7 @@ def fetch_website(domain: str) -> str:
         r = requests.get(f"https://{domain}", timeout=10)
         return r.text[:5000]
     except Exception as e:
-        return str(e)
+        return f"TOOL_ERROR: {str(e)}"
 
 
 # ------------------------------------------------
@@ -158,12 +178,13 @@ def security_headers(domain: str) -> str:
         return str(results)
 
     except Exception as e:
-        return str(e)
+        return f"TOOL_ERROR: {str(e)}"
 
 
 # ------------------------------------------------
 # METADATA EXTRACTION
 # ------------------------------------------------
+
 
 @tool("Extract Metadata")
 def extract_metadata(domain: str) -> str:
@@ -197,27 +218,26 @@ def extract_metadata(domain: str) -> str:
         if meta:
             description = meta.get("content")
 
-        headings = [
-            h.text.strip() for h in soup.find_all(["h1", "h2", "h3"])
-        ][:10]
+        headings = [h.text.strip() for h in soup.find_all(["h1", "h2", "h3"])][:10]
 
         return f"""
             Title: {title}
-            
+
             Description:
             {description}
-            
+
             Headings:
             {headings}
             """
 
     except Exception as e:
-        return str(e)
+        return f"TOOL_ERROR: {str(e)}"
 
 
 # ------------------------------------------------
 # TECH STACK DETECTION
 # ------------------------------------------------
+
 
 @tool("Detect Tech Stack")
 def detect_tech_stack(domain: str) -> str:
@@ -241,17 +261,18 @@ def detect_tech_stack(domain: str) -> str:
     try:
         url = f"https://{domain}"
 
-        tech = analyze(url)
+        tech = wappalyzer.analyze(url)
 
         return f"Technologies: {list(tech)}"
 
     except Exception as e:
-        return str(e)
+        return f"TOOL_ERROR: {str(e)}"
 
 
 # ------------------------------------------------
 # SSL CERTIFICATE ANALYSIS
 # ------------------------------------------------
+
 
 @tool("SSL Certificate Analysis")
 def analyze_ssl_certificate(domain: str) -> str:
@@ -291,18 +312,19 @@ def analyze_ssl_certificate(domain: str) -> str:
             """
 
     except Exception as e:
-        return str(e)
+        return f"TOOL_ERROR: {str(e)}"
 
 
 # ------------------------------------------------
 # PARALLEL WEBSITE CRAWLER
 # ------------------------------------------------
 
+
 def fetch_page(url):
     try:
         r = requests.get(url, timeout=10)
         return r.text
-    except:
+    except Exception:
         return ""
 
 
@@ -327,7 +349,6 @@ def crawl_website(domain: str) -> str:
     - Number of pages fetched
     """
     try:
-
         base = f"https://{domain}"
 
         r = requests.get(base, timeout=10)
@@ -350,18 +371,19 @@ def crawl_website(domain: str) -> str:
         return f"""
             Discovered pages:
             {links}
-            
+
             Pages fetched:
             {len(pages)}
             """
 
     except Exception as e:
-        return str(e)
+        return f"TOOL_ERROR: {str(e)}"
 
 
 # ------------------------------------------------
 # ROBOTS.TXT ANALYSIS
 # ------------------------------------------------
+
 
 @tool("Robots.txt Analyzer")
 def analyze_robots(domain: str) -> str:
@@ -389,12 +411,13 @@ def analyze_robots(domain: str) -> str:
         return r.text[:2000]
 
     except Exception as e:
-        return str(e)
+        return f"TOOL_ERROR: {str(e)}"
 
 
 # ------------------------------------------------
 # SITEMAP ANALYSIS
 # ------------------------------------------------
+
 
 @tool("Sitemap Analyzer")
 def analyze_sitemap(domain: str) -> str:
@@ -422,12 +445,13 @@ def analyze_sitemap(domain: str) -> str:
         return r.text[:2000]
 
     except Exception as e:
-        return str(e)
+        return f"TOOL_ERROR: {str(e)}"
 
 
 # ------------------------------------------------
 # PERFORMANCE TEST
 # ------------------------------------------------
+
 
 @tool("Performance Measurement")
 def measure_performance(domain: str) -> str:
@@ -465,4 +489,72 @@ def measure_performance(domain: str) -> str:
                 """
 
     except Exception as e:
-        return str(e)
+        return f"TOOL_ERROR: {str(e)}"
+
+
+# ------------------------------------------------
+# PORTS SCAN
+# ------------------------------------------------
+
+
+@tool("Port Scanner")
+def scan_ports(host: str, ports: list[int]) -> str:
+    """
+    Scan common ports on a target host.
+
+    TOOL INPUT FORMAT:
+    {
+        "host": "example.com",
+        "ports": [80, 443, 22]
+    }
+
+    PARAMETER INSTRUCTIONS:
+    - The "ports" parameter must be a list of common TCP ports.
+    - Generate 50–100 commonly used ports in modern infrastructure.
+
+    Include categories such as:
+    - Web: 80, 443, 8080, 8443
+    - Remote access: 22 (SSH), 3389 (RDP), 5900 (VNC)
+    - File transfer: 20, 21 (FTP), 989, 990 (FTPS)
+    - Email: 25 (SMTP), 465, 587, 110 (POP3), 995, 143 (IMAP), 993
+    - Databases: 3306 (MySQL), 5432 (PostgreSQL), 1433 (MSSQL), 27017 (MongoDB), 6379 (Redis)
+    - Dev services: 3000, 5000, 5173, 8000
+    - Infrastructure: 53 (DNS), 123 (NTP), 161 (SNMP)
+    - Message brokers: 5672 (RabbitMQ), 9092 (Kafka)
+    - Monitoring: 9090 (Prometheus), 3000 (Grafana)
+
+    RULES:
+    - Provide only port numbers.
+    - Do NOT include protocols.
+    - Ports must be integers.
+
+    Example:
+    {
+        "host": "example.com",
+        "ports": [22, 80, 443, 3306]
+    }
+
+    Returns:
+    A newline-separated list of open ports.
+    """
+
+    open_ports = []
+
+    for port in ports:
+        try:
+            sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            sock.settimeout(1)
+
+            result = sock.connect_ex((host, port))
+            if result == 0:
+                open_ports.append(port)
+
+            sock.close()
+
+        except Exception:
+            pass
+
+    if not open_ports:
+        return "No open ports discovered"
+
+    return "\n".join(str(p) for p in open_ports)

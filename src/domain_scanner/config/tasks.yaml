@@ -19,7 +19,8 @@ reconnaissance_task:
     2. DNS records discovered
     3. IP addresses associated with the domain
     4. List of discovered subdomains
-    5. Observed exposed services or infrastructure indicators
+    5. Scan common ports to detect other services
+    6. Observed exposed services or infrastructure indicators
 
   agent: recon_agent
   async_execution: true
@@ -108,6 +109,8 @@ security_analysis_task:
     - tech_stack_analysis_task
     - infrastructure_analysis_task
 
+  async_execution: true
+
 
 performance_analysis_task:
   description: >
@@ -156,6 +159,7 @@ website_content_analysis_task:
     3. Metadata (title, description, keywords)
     4. Notes about site structure (e.g., sections, navigation)
   agent: website_content_agent
+  async_execution: true
 
 
 ux_ui_analysis_task:
@@ -180,6 +184,25 @@ ux_ui_analysis_task:
     - website_content_analysis_task
 
 
+trust_evaluation_task:
+  description: >
+    Analyze the technical security findings, infrastructure details,
+    and website content to output a definitive assessment on whether
+    a typical user should trust '{domain}' with private information.
+    Look for red flags such as missing SSL, bad security headers,
+    missing contact info, or sketchy domain structures.
+  expected_output: >
+    A markdown report with:
+    1. Trust Score (1-100)
+    2. Final Verdict (YES / NO / USE CAUTION)
+    3. Key technical factors influencing this verdict
+  agent: trust_agent
+  context:
+    - security_analysis_task
+    - website_content_analysis_task
+    - infrastructure_analysis_task
+
+
 report_generation_task:
   description: >
     Produce the final comprehensive analysis report for the
@@ -189,6 +212,9 @@ report_generation_task:
     tech stack, infrastructure, security, performance,
     website content, and UX/UI evaluation. Highlight key insights
     and recommendations in a structured report.
+
+    ROLES:
+     - make the length of the report below 200 lines, never more the that, summerize all the info to squeeze into that margin.
 
   expected_output: >
     A final markdown report structured as follows:
@@ -217,8 +243,12 @@ report_generation_task:
     Usability, navigation clarity, accessibility, and overall convenience
     rating, including actionable recommendations.
 
+    ## Data Privacy & Trust Evaluation
+    Assessment of data handling risks, missing security fundamentals,
+    deceptive patterns, and a final Trust Score (1-100).
+
     ## Recommendations
-    Practical improvements for security, performance, content, and UX.
+    Practical improvements for security, performance, content, UX, and trust.
 
   agent: report_agent
   context:
@@ -229,5 +259,6 @@ report_generation_task:
     - performance_analysis_task
     - website_content_analysis_task
     - ux_ui_analysis_task
+    - trust_evaluation_task
 
   output_file: reports/{domain}_report.md

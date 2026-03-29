@@ -1,7 +1,7 @@
 # DomainScanner – AI-Powered Web Analysis Tool
 
-**DomainScanner** is an advanced multi-agent system built with [CrewAI](https://www.crewai.com) designed to perform **comprehensive analysis of web services**.  
-It leverages AI agents, and specialized tools to evaluate **security, technology, performance, UX/UI, and metadata**.
+**DomainScanner** is an advanced multi-agent system built with [CrewAI](https://www.crewai.com) designed to perform **comprehensive analysis of web services**.
+It leverages AI agents and specialized tools to evaluate **security, technology, performance, UX/UI, and metadata**.
 
 ---
 
@@ -19,55 +19,163 @@ DomainScanner is designed to replace manual auditing with an **automated, intell
 
 ---
 
+## Agents, Tasks, and Tools
+
+The system orchestrates specialized AI agents that execute specific assigned tasks using a suite of custom Python tools:
+
+1. **Reconnaissance Agent** (`recon_agent`)
+   - **Task**: `reconnaissance_task` (Identify DNS records, IPs, subdomains, and exposed ports)
+   - **Tools Used**: `DNS Lookup`, `Subdomain Discovery`, `Port Scanner`, `Robots.txt Analyzer`
+
+2. **Technology Intelligence Analyst** (`tech_stack_agent`)
+   - **Task**: `tech_stack_analysis_task` (Identify frontend/backend frameworks, web servers, and CDNs)
+   - **Tools Used**: `Detect Tech Stack`
+
+3. **Cloud Infrastructure Analyst** (`infrastructure_agent`)
+   - **Task**: `infrastructure_analysis_task` (Determine hosting environments, CDN usage, and TLS config)
+   - **Tools Used**: `DNS Lookup`, `SSL Certificate Analysis`
+
+4. **Web Security Analyst** (`security_agent`)
+   - **Task**: `security_analysis_task` (Evaluate vulnerabilities, missing security headers, and risks)
+   - **Tools Used**: `Security Headers Scan`, `SSL Certificate Analysis`
+
+5. **Performance Engineer** (`performance_agent`)
+   - **Task**: `performance_analysis_task` (Analyze response latency, content size, and performance behavior)
+   - **Tools Used**: `Performance Measurement`
+
+6. **Web Content Analyst** (`website_content_agent`)
+   - **Task**: `website_content_analysis_task` (Retrieve HTML, extract main metadata and content)
+   - **Tools Used**: `Fetch Website HTML`, `Extract Metadata`, `Parallel Website Crawler`, `Sitemap Analyzer`, `Robots.txt Analyzer`
+
+7. **UX/UI Evaluation Specialist** (`ux_ui_agent`)
+   - **Task**: `ux_ui_analysis_task` (Assess navigation clarity, accessibility, and overall user experience)
+   - **Tools Used**: `Fetch Website HTML`, `Extract Metadata`, `Parallel Website Crawler`, `Sitemap Analyzer`
+
+8. **Technical Report Architect** (`report_agent`)
+   - **Task**: `report_generation_task` (Synthesize all previous agent findings into a final consolidated Markdown report)
+   - **Tools Used**: None (Consumes context from previous tasks)
+
+---
+
 ## Key Features
 
-1. **AI-Powered UX/UI Agent**  
-   - Evaluates usability, navigation clarity, and user convenience.  
-   - Provides actionable feedback on site design and accessibility.
+1. **AI-Powered UX/UI Agent**
+   - Evaluates usability, navigation clarity, and user convenience.
 
-2. **Advanced Security Toolset**  
-   - Improved detection of missing or misconfigured HTTP headers.  
-   - Enhanced SSL/TLS certificate inspection for real-world security auditing.
+2. **Advanced Security Toolset**
+   - Improved detection of missing or misconfigured HTTP headers and SSL inspection.
 
-3. **Full Domain Crawl with Parallel Fetching**  
-   - Fetches multiple pages concurrently to map internal links efficiently.  
-   - Limits requests to avoid overload while providing comprehensive coverage.
+3. **Full Domain Crawl with Parallel Fetching**
+   - Fetches multiple pages concurrently to map internal links efficiently.
 
-4. **Tech Stack Analysis Enhancements**  
-   - Integrates Wappalyzer for detailed detection of frameworks, CMS, and server technologies.  
-   - Provides insights into software versions, enabling better risk assessment.
+4. **Tech Stack Analysis Enhancements**
+   - Integrates Wappalyzer for detailed footprint scanning.
 
-5. **Metadata & SEO Improvements**  
-   - Extracts structured headings, meta tags, sitemap.xml, and robots.txt rules.  
-   - Highlights SEO issues or accessibility concerns.
+5. **Metadata & SEO Improvements**
+   - Extracts structured headings, meta tags, sitemap.xml, and robots.txt rules.
 
-6. **Automated, Domain-Named Reporting**  
-   - Each scan generates a Markdown report named after the target domain.  
-   - Structured with clear sections: Infrastructure, Security, Tech Stack, UX/UI, Performance, and SEO.
+6. **Automated, Domain-Named Reporting**
+   - Each scan generates a Markdown report formatted for professional review.
 
-7. **Extensible Agent & Tool Framework**  
-   - Agents can be easily customized or extended.  
-   - Tools are modular, allowing future integration of new analysis capabilities.
+7. **Extensible Agent & Tool Framework**
+   - Modular workflow for simple integrations of future toolkits.
 
 ---
 
-## Benefits
+## Running Locally
 
-- **Automated Efficiency** – Reduces manual effort and human error in domain audits.  
-- **Comprehensive Coverage** – Combines security, UX/UI, performance, and SEO in one scan.  
-- **Professional Reporting** – Outputs structured, actionable reports suitable for internal review or client presentation.  
-- **Modular & Extensible** – New tools and agents can be added as requirements evolve.  
-- **AI-Powered Insights** – Uses specialized agents to provide intelligent evaluations beyond simple checks.
+To run the DomainScanner crew locally, you need to execute the main script that kicks off the CrewAI execution flow.
+
+### Step-by-Step Execution
+
+1. **Install Dependencies:**
+   Ensure all dependencies are synced perfectly:
+   ```bash
+   uv sync
+   ```
+
+2. **Configure Environment (`.env`):**
+   Create a `.env` file in the root directory to supply your API keys and the required LLM configuration. For LiteLLM supported models, you need to provide the specific provider's API key and define the model string. For example:
+   ```env
+   OPENAI_API_KEY=your_openai_api_key_here
+   OPENAI_MODEL_NAME=openai/gpt-4o
+   ```
+   Or if using Anthropic:
+   ```env
+   ANTHROPIC_API_KEY=your_anthropic_api_key_here
+   OPENAI_MODEL_NAME=anthropic/claude-3-5-sonnet-20240620
+   ```
+   *(Note: CrewAI utilizes `OPENAI_MODEL_NAME` natively as its default routing variable, even when using other provider strings through LiteLLM).*
+
+> [!IMPORTANT]
+> Do **NOT** use basic or strictly conversational models for this project. DomainScanner heavily relies on functional execution, meaning you must provide **Tool-Oriented Models** (also known as Function-Calling models).
+>
+> **Examples of strongly recommended tool-oriented models:**
+> - `openai/gpt-4o` or `openai/gpt-4-turbo`
+> - `anthropic/claude-3-5-sonnet-20240620`
+> - `google/gemini-1.5-pro`
+>
+> Specifying models that lack robust tool execution capabilities (like `gpt-3.5-turbo` or small local models like `llama3` without proper routing) will result in unpredictable behavior or immediate agent failure!
+
+3. **Run the Crew via CLI (Recommended):**
+   We have included a dedicated command-line interface for local use. Run the scanner using the built-in `scan` command and pass your target domain as an argument:
+   ```bash
+   uv run scan --domain "your-target-domain.com"
+   ```
+
+   **Using Environment Variables (Cloud Native / CrewAI AMP):**
+   Alternatively, if you are running the native CrewAI scripts directly or deploying to the cloud (CrewAI AMP), the `main.py` entrypoint is completely configuration-driven. It reads from standard environment variables, requiring zero code modification.
+
+   Run it seamlessly by injecting the `TARGET_DOMAIN` variable:
+   ```bash
+   # Linux / macOS
+   TARGET_DOMAIN="your-target-domain.com" uv run run_crew
+
+   # Windows (PowerShell)
+   $env:TARGET_DOMAIN="your-target-domain.com"; uv run run_crew
+   ```
 
 ---
 
-## Version Highlights
+## Testing
 
-- **v2.0** introduces the **UX/UI analysis agent** and **enhanced report generation**.  
-- **Improved concurrency** for website crawling, reducing scan times without sacrificing thoroughness.  
-- **Better error handling** in tools, ensuring robustness against unreachable pages or malformed responses.  
-- **Expanded toolset** including `robots.txt` and `sitemap.xml` analysis.  
-- Fully aligned **agent specialization**: each agent now has a clear role, goal, and backstory for higher quality outputs.
+A comprehensive unit test suite ensures all the custom tools function reliably without triggering actual live network calls to arbitrary target domains. This means your testing workflows are completely deterministic, fast, and fail-proof against rate-limiting or network downtime!
+
+### Running the Test Suite
+
+1. **Dependencies:** Make sure your `dev` dependencies are synced with `uv`:
+   ```bash
+   uv sync
+   ```
+
+2. **Execute pytest:** From the root folder, run `pytest` either globally if your virtual environment is active, or safely through `uv`:
+   ```bash
+   uv run pytest tests/ -v
+   ```
+   Or inside the activated environment:
+   ```bash
+   pytest .
+   ```
+
+**What the tests cover:**
+- **`tests/test_domain_tools.py`**: Exhaustive function validation for all domain tools. Uses `pytest-mock` to seamlessly mock heavy elements such as `requests`, `socket`, `ssl`, and ThreadPools!
+- **`tests/test_crew.py`**: Ensures `DomainScanner` instantiation operates flawlessly by testing the integrity between the `crew.py` classes and their YAML configs.
+
+## Development & Contributing
+
+This project strictly enforces code quality and formatting through `pre-commit` and `Ruff`. Before submitting any code or pull requests, please ensure the hooks are installed locally:
+
+```bash
+# 1. Ensure the dev dependencies (pre-commit, ruff, pytest) are synced
+uv sync --dev
+
+# 2. Install the git hooks
+uv run pre-commit install
+
+# 3. (Optional) Run against all files manually
+uv run pre-commit run --all-files
+```
+Once installed, `Ruff` will automatically format your Python code and check for standard YAML/whitespace issues every time you run `git commit`.
 
 ---
 
