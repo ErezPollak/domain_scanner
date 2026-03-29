@@ -10,13 +10,10 @@ def test_crew_instantiation():
 
     # Basic sanity checks ensuring config loads without crashing
     assert crew is not None
-    assert len(crew.agents) > 0
-    assert len(crew.tasks) > 0
+    assert len(crew.agents) == 9, f"Expected 9 agents, found {len(crew.agents)}"
+    assert len(crew.tasks) == 9, f"Expected 9 tasks, found {len(crew.tasks)}"
 
-    # Check that specific agents exist
+    # Check that specific key agents exist
     agent_roles = [agent.role for agent in crew.agents]
-    # We can check for partial role strings or existence of roles
-    assert (
-        any("Reconnaissance Specialist" in role for role in agent_roles)
-        or len(agent_roles) == 8
-    )
+    assert any("Cybersecurity Reconnaissance" in role for role in agent_roles)
+    assert any("Data Privacy & Trust" in role for role in agent_roles)

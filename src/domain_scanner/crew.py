@@ -99,6 +99,14 @@ class DomainScanner:
         )
 
     @agent
+    def trust_agent(self) -> Agent:
+        return Agent(
+            config=self.agents_config["trust_agent"],
+            verbose=True,
+            cache=True,
+        )
+
+    @agent
     def report_agent(self) -> Agent:
         return Agent(config=self.agents_config["report_agent"], cache=True)
 
@@ -133,6 +141,10 @@ class DomainScanner:
     @task
     def ux_ui_analysis_task(self) -> Task:
         return Task(config=self.tasks_config["ux_ui_analysis_task"])
+
+    @task
+    def trust_evaluation_task(self) -> Task:
+        return Task(config=self.tasks_config["trust_evaluation_task"])
 
     @task
     def report_generation_task(self) -> Task:

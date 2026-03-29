@@ -184,6 +184,25 @@ ux_ui_analysis_task:
     - website_content_analysis_task
 
 
+trust_evaluation_task:
+  description: >
+    Analyze the technical security findings, infrastructure details,
+    and website content to output a definitive assessment on whether
+    a typical user should trust '{domain}' with private information.
+    Look for red flags such as missing SSL, bad security headers,
+    missing contact info, or sketchy domain structures.
+  expected_output: >
+    A markdown report with:
+    1. Trust Score (1-100)
+    2. Final Verdict (YES / NO / USE CAUTION)
+    3. Key technical factors influencing this verdict
+  agent: trust_agent
+  context:
+    - security_analysis_task
+    - website_content_analysis_task
+    - infrastructure_analysis_task
+
+
 report_generation_task:
   description: >
     Produce the final comprehensive analysis report for the
@@ -224,8 +243,12 @@ report_generation_task:
     Usability, navigation clarity, accessibility, and overall convenience
     rating, including actionable recommendations.
 
+    ## Data Privacy & Trust Evaluation
+    Assessment of data handling risks, missing security fundamentals,
+    deceptive patterns, and a final Trust Score (1-100).
+
     ## Recommendations
-    Practical improvements for security, performance, content, and UX.
+    Practical improvements for security, performance, content, UX, and trust.
 
   agent: report_agent
   context:
@@ -236,5 +259,6 @@ report_generation_task:
     - performance_analysis_task
     - website_content_analysis_task
     - ux_ui_analysis_task
+    - trust_evaluation_task
 
   output_file: reports/{domain}_report.md
