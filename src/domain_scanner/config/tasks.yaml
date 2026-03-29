@@ -19,10 +19,10 @@ reconnaissance_task:
     2. DNS records discovered
     3. IP addresses associated with the domain
     4. List of discovered subdomains
-    5. Observed exposed services or infrastructure indicators
+    5. Scan common ports to detect other services
+    6. Observed exposed services or infrastructure indicators
 
   agent: recon_agent
-  async_execution: true
 
 
 tech_stack_analysis_task:
@@ -189,6 +189,9 @@ report_generation_task:
     tech stack, infrastructure, security, performance,
     website content, and UX/UI evaluation. Highlight key insights
     and recommendations in a structured report.
+    
+    ROLES:
+     - make the length of the report below 200 lines, never more the that, summerize all the info to squeeze into that margin.
 
   expected_output: >
     A final markdown report structured as follows:

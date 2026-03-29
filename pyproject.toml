@@ -5,10 +5,12 @@ description = "domain_scanner using crewAI"
 authors = [{ name = "Your Name", email = "you@example.com" }]
 requires-python = ">=3.10,<3.14"
 dependencies = [
-    "crewai[google-genai,tools]==1.11.0",
-    "dnspython>=2.8.0",
+    "crewai==1.11.0",
     "litellm>=1.82.5",
+    "dnspython>=2.8.0",
     "wappalyzer>=1.0.20",
+    "pip>=26.0.1",
+    "py-spy>=0.4.1",
 ]
 
 [project.scripts]
@@ -29,4 +31,10 @@ type = "crew"
 [tool.uv]
 required-environments = [
   "sys_platform == 'win32' and platform_machine == 'AMD64'"
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=9.0.2",
+    "pytest-mock>=3.15.1",
 ]

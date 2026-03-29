@@ -10,7 +10,7 @@ def run():
     Run the crew.
     """
     inputs = {
-        'domain': 'suneido.com'
+        'domain': 'challenge-group.com'
     }
 
     try:

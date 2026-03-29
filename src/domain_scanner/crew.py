@@ -14,7 +14,8 @@ from domain_scanner.tools.domain_tools import (
     crawl_website,
     measure_performance,
     analyze_sitemap,
-    analyze_robots
+    analyze_robots,
+    scan_ports
 )
 
 
@@ -36,7 +37,8 @@ class DomainScanner:
             tools=[
                 analyze_robots,
                 dns_lookup,
-                discover_subdomains
+                discover_subdomains,
+                scan_ports
             ],
             verbose=True
         )
@@ -46,7 +48,6 @@ class DomainScanner:
         return Agent(
             config=self.agents_config["tech_stack_agent"],
             tools=[
-                fetch_website,
                 detect_tech_stack
             ],
             verbose=True
@@ -114,8 +115,7 @@ class DomainScanner:
     @agent
     def report_agent(self) -> Agent:
         return Agent(
-            config=self.agents_config["report_agent"],
-            verbose=True
+            config=self.agents_config["report_agent"]
         )
 
     # -------------------------------------------------
