@@ -14,6 +14,7 @@ import wappalyzer
 # DNS LOOKUP
 # ------------------------------------------------
 
+
 @tool("DNS Lookup")
 def dns_lookup(domain: str) -> str:
     """
@@ -108,6 +109,7 @@ def discover_subdomains(domain: str, subdomains: list[str]) -> str:
 # FETCH WEBSITE
 # ------------------------------------------------
 
+
 @tool("Fetch Website HTML")
 def fetch_website(domain: str) -> str:
     """
@@ -183,6 +185,7 @@ def security_headers(domain: str) -> str:
 # METADATA EXTRACTION
 # ------------------------------------------------
 
+
 @tool("Extract Metadata")
 def extract_metadata(domain: str) -> str:
     """
@@ -215,16 +218,14 @@ def extract_metadata(domain: str) -> str:
         if meta:
             description = meta.get("content")
 
-        headings = [
-            h.text.strip() for h in soup.find_all(["h1", "h2", "h3"])
-        ][:10]
+        headings = [h.text.strip() for h in soup.find_all(["h1", "h2", "h3"])][:10]
 
         return f"""
             Title: {title}
-            
+
             Description:
             {description}
-            
+
             Headings:
             {headings}
             """
@@ -236,6 +237,7 @@ def extract_metadata(domain: str) -> str:
 # ------------------------------------------------
 # TECH STACK DETECTION
 # ------------------------------------------------
+
 
 @tool("Detect Tech Stack")
 def detect_tech_stack(domain: str) -> str:
@@ -270,6 +272,7 @@ def detect_tech_stack(domain: str) -> str:
 # ------------------------------------------------
 # SSL CERTIFICATE ANALYSIS
 # ------------------------------------------------
+
 
 @tool("SSL Certificate Analysis")
 def analyze_ssl_certificate(domain: str) -> str:
@@ -316,11 +319,12 @@ def analyze_ssl_certificate(domain: str) -> str:
 # PARALLEL WEBSITE CRAWLER
 # ------------------------------------------------
 
+
 def fetch_page(url):
     try:
         r = requests.get(url, timeout=10)
         return r.text
-    except:
+    except Exception:
         return ""
 
 
@@ -345,7 +349,6 @@ def crawl_website(domain: str) -> str:
     - Number of pages fetched
     """
     try:
-
         base = f"https://{domain}"
 
         r = requests.get(base, timeout=10)
@@ -368,7 +371,7 @@ def crawl_website(domain: str) -> str:
         return f"""
             Discovered pages:
             {links}
-            
+
             Pages fetched:
             {len(pages)}
             """
@@ -380,6 +383,7 @@ def crawl_website(domain: str) -> str:
 # ------------------------------------------------
 # ROBOTS.TXT ANALYSIS
 # ------------------------------------------------
+
 
 @tool("Robots.txt Analyzer")
 def analyze_robots(domain: str) -> str:
@@ -414,6 +418,7 @@ def analyze_robots(domain: str) -> str:
 # SITEMAP ANALYSIS
 # ------------------------------------------------
 
+
 @tool("Sitemap Analyzer")
 def analyze_sitemap(domain: str) -> str:
     """
@@ -446,6 +451,7 @@ def analyze_sitemap(domain: str) -> str:
 # ------------------------------------------------
 # PERFORMANCE TEST
 # ------------------------------------------------
+
 
 @tool("Performance Measurement")
 def measure_performance(domain: str) -> str:
@@ -489,6 +495,7 @@ def measure_performance(domain: str) -> str:
 # ------------------------------------------------
 # PORTS SCAN
 # ------------------------------------------------
+
 
 @tool("Port Scanner")
 def scan_ports(host: str, ports: list[int]) -> str:

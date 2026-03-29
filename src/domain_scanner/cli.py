@@ -1,6 +1,7 @@
 import argparse
 from domain_scanner.crew import DomainScanner
 
+
 def main():
     """
     Command Line Interface for DomainScanner.
@@ -10,33 +11,34 @@ def main():
     parser = argparse.ArgumentParser(
         description="DomainScanner CLI: AI-Powered Web Analysis Tool"
     )
-    
+
     parser.add_argument(
         "--domain",
         type=str,
         required=True,
-        help="The target domain to scan (e.g., example.com)"
+        help="The target domain to scan (e.g., example.com)",
     )
-    
+
     args = parser.parse_args()
-    
+
     print(f"\n🚀 Initializing DomainScanner for target: {args.domain}")
     print("==================================================\n")
-    
-    inputs = {
-        'domain': args.domain
-    }
-    
+
+    inputs = {"domain": args.domain}
+
     try:
         scanner = DomainScanner()
-        
+
         # Execute the AI agent workflow
         scanner.crew().kickoff(inputs=inputs)
-        
-        print(f"\n✅ Scan completed! Check the 'reports' directory for '{args.domain}_report.md'.")
-        
+
+        print(
+            f"\n✅ Scan completed! Check the 'reports' directory for '{args.domain}_report.md'."
+        )
+
     except Exception as e:
         print(f"\n❌ An error occurred during execution: {e}")
-        
+
+
 if __name__ == "__main__":
     main()

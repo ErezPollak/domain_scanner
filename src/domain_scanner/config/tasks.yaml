@@ -108,7 +108,7 @@ security_analysis_task:
     - reconnaissance_task
     - tech_stack_analysis_task
     - infrastructure_analysis_task
-    
+
   async_execution: true
 
 
@@ -193,7 +193,7 @@ report_generation_task:
     tech stack, infrastructure, security, performance,
     website content, and UX/UI evaluation. Highlight key insights
     and recommendations in a structured report.
-    
+
     ROLES:
      - make the length of the report below 200 lines, never more the that, summerize all the info to squeeze into that margin.
 

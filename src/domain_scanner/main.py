@@ -6,16 +6,16 @@ from domain_scanner.crew import DomainScanner
 
 warnings.filterwarnings("ignore", category=SyntaxWarning, module="pysbd")
 
+
 def get_target_domain():
     return os.getenv("TARGET_DOMAIN", "example.com")
+
 
 def run():
     """
     Run the crew.
     """
-    inputs = {
-        'domain': get_target_domain()
-    }
+    inputs = {"domain": get_target_domain()}
 
     try:
         DomainScanner().crew().kickoff(inputs=inputs)
@@ -27,11 +27,11 @@ def train():
     """
     Train the crew for a given number of iterations.
     """
-    inputs = {
-        'domain': get_target_domain()
-    }
+    inputs = {"domain": get_target_domain()}
     try:
-        DomainScanner().crew().train(n_iterations=int(sys.argv[1]), filename=sys.argv[2], inputs=inputs)
+        DomainScanner().crew().train(
+            n_iterations=int(sys.argv[1]), filename=sys.argv[2], inputs=inputs
+        )
 
     except Exception as e:
         raise Exception(f"An error occurred while training the crew: {e}")
@@ -52,12 +52,12 @@ def test():
     """
     Test the crew execution and returns the results.
     """
-    inputs = {
-        'domain': get_target_domain()
-    }
+    inputs = {"domain": get_target_domain()}
 
     try:
-        DomainScanner().crew().test(n_iterations=int(sys.argv[1]), eval_llm=sys.argv[2], inputs=inputs)
+        DomainScanner().crew().test(
+            n_iterations=int(sys.argv[1]), eval_llm=sys.argv[2], inputs=inputs
+        )
 
     except Exception as e:
         raise Exception(f"An error occurred while testing the crew: {e}")
@@ -70,7 +70,9 @@ def run_with_trigger():
     import json
 
     if len(sys.argv) < 2:
-        raise Exception("No trigger payload provided. Please provide JSON payload as argument.")
+        raise Exception(
+            "No trigger payload provided. Please provide JSON payload as argument."
+        )
 
     try:
         trigger_payload = json.loads(sys.argv[1])

@@ -1,6 +1,6 @@
 # DomainScanner – AI-Powered Web Analysis Tool
 
-**DomainScanner** is an advanced multi-agent system built with [CrewAI](https://www.crewai.com) designed to perform **comprehensive analysis of web services**.  
+**DomainScanner** is an advanced multi-agent system built with [CrewAI](https://www.crewai.com) designed to perform **comprehensive analysis of web services**.
 It leverages AI agents and specialized tools to evaluate **security, technology, performance, UX/UI, and metadata**.
 
 ---
@@ -59,26 +59,26 @@ The system orchestrates specialized AI agents that execute specific assigned tas
 
 ## Key Features
 
-1. **AI-Powered UX/UI Agent**  
-   - Evaluates usability, navigation clarity, and user convenience.  
+1. **AI-Powered UX/UI Agent**
+   - Evaluates usability, navigation clarity, and user convenience.
 
-2. **Advanced Security Toolset**  
-   - Improved detection of missing or misconfigured HTTP headers and SSL inspection.  
+2. **Advanced Security Toolset**
+   - Improved detection of missing or misconfigured HTTP headers and SSL inspection.
 
-3. **Full Domain Crawl with Parallel Fetching**  
-   - Fetches multiple pages concurrently to map internal links efficiently.  
+3. **Full Domain Crawl with Parallel Fetching**
+   - Fetches multiple pages concurrently to map internal links efficiently.
 
-4. **Tech Stack Analysis Enhancements**  
-   - Integrates Wappalyzer for detailed footprint scanning.  
+4. **Tech Stack Analysis Enhancements**
+   - Integrates Wappalyzer for detailed footprint scanning.
 
-5. **Metadata & SEO Improvements**  
-   - Extracts structured headings, meta tags, sitemap.xml, and robots.txt rules.  
+5. **Metadata & SEO Improvements**
+   - Extracts structured headings, meta tags, sitemap.xml, and robots.txt rules.
 
-6. **Automated, Domain-Named Reporting**  
-   - Each scan generates a Markdown report formatted for professional review.  
+6. **Automated, Domain-Named Reporting**
+   - Each scan generates a Markdown report formatted for professional review.
 
-7. **Extensible Agent & Tool Framework**  
-   - Modular workflow for simple integrations of future toolkits.  
+7. **Extensible Agent & Tool Framework**
+   - Modular workflow for simple integrations of future toolkits.
 
 ---
 
@@ -111,7 +111,7 @@ To run the DomainScanner crew locally, you need to execute the main script that 
 > Do **NOT** use basic or strictly conversational models for this project. DomainScanner heavily relies on functional execution, meaning you must provide **Tool-Oriented Models** (also known as Function-Calling models).
 >
 > **Examples of strongly recommended tool-oriented models:**
-> - `openai/gpt-4o` or `openai/gpt-4-turbo` 
+> - `openai/gpt-4o` or `openai/gpt-4-turbo`
 > - `anthropic/claude-3-5-sonnet-20240620`
 > - `google/gemini-1.5-pro`
 >
@@ -124,8 +124,8 @@ To run the DomainScanner crew locally, you need to execute the main script that 
    ```
 
    **Using Environment Variables (Cloud Native / CrewAI AMP):**
-   Alternatively, if you are running the native CrewAI scripts directly or deploying to the cloud (CrewAI AMP), the `main.py` entrypoint is completely configuration-driven. It reads from standard environment variables, requiring zero code modification. 
-   
+   Alternatively, if you are running the native CrewAI scripts directly or deploying to the cloud (CrewAI AMP), the `main.py` entrypoint is completely configuration-driven. It reads from standard environment variables, requiring zero code modification.
+
    Run it seamlessly by injecting the `TARGET_DOMAIN` variable:
    ```bash
    # Linux / macOS
@@ -160,6 +160,22 @@ A comprehensive unit test suite ensures all the custom tools function reliably w
 **What the tests cover:**
 - **`tests/test_domain_tools.py`**: Exhaustive function validation for all domain tools. Uses `pytest-mock` to seamlessly mock heavy elements such as `requests`, `socket`, `ssl`, and ThreadPools!
 - **`tests/test_crew.py`**: Ensures `DomainScanner` instantiation operates flawlessly by testing the integrity between the `crew.py` classes and their YAML configs.
+
+## Development & Contributing
+
+This project strictly enforces code quality and formatting through `pre-commit` and `Ruff`. Before submitting any code or pull requests, please ensure the hooks are installed locally:
+
+```bash
+# 1. Ensure the dev dependencies (pre-commit, ruff, pytest) are synced
+uv sync --dev
+
+# 2. Install the git hooks
+uv run pre-commit install
+
+# 3. (Optional) Run against all files manually
+uv run pre-commit run --all-files
+```
+Once installed, `Ruff` will automatically format your Python code and check for standard YAML/whitespace issues every time you run `git commit`.
 
 ---
 
