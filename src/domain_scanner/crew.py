@@ -40,7 +40,7 @@ class DomainScanner:
                 discover_subdomains,
                 scan_ports
             ],
-            verbose=True
+            verbose=True, cache=True
         )
 
     @agent
@@ -50,7 +50,7 @@ class DomainScanner:
             tools=[
                 detect_tech_stack
             ],
-            verbose=True
+            verbose=True, cache=True
         )
 
     @agent
@@ -61,7 +61,7 @@ class DomainScanner:
                 dns_lookup,
                 analyze_ssl_certificate
             ],
-            verbose=True
+            verbose=True, cache=True
         )
 
     @agent
@@ -72,7 +72,7 @@ class DomainScanner:
                 security_headers,
                 analyze_ssl_certificate
             ],
-            verbose=True
+            verbose=True, cache=True
         )
 
     @agent
@@ -82,7 +82,7 @@ class DomainScanner:
             tools=[
                 measure_performance
             ],
-            verbose=True
+            verbose=True, cache=True
         )
 
     @agent
@@ -96,7 +96,7 @@ class DomainScanner:
                 extract_metadata,
                 crawl_website
             ],
-            verbose=True
+            verbose=True, cache=True
         )
 
     @agent
@@ -109,13 +109,14 @@ class DomainScanner:
                 extract_metadata,
                 crawl_website
             ],
-            verbose=True
+            verbose=True, cache=True
         )
 
     @agent
     def report_agent(self) -> Agent:
         return Agent(
-            config=self.agents_config["report_agent"]
+            config=self.agents_config["report_agent"],
+            cache=True
         )
 
     # -------------------------------------------------
@@ -183,5 +184,5 @@ class DomainScanner:
             agents=self.agents,
             tasks=self.tasks,
             process=Process.sequential,
-            verbose=True
+            verbose=True, cache=True
         )

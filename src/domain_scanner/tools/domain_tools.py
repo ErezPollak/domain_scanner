@@ -39,7 +39,7 @@ def dns_lookup(domain: str) -> str:
         ip = socket.gethostbyname(domain)
         return f"{domain} -> {ip}"
     except Exception as e:
-        return str(e)
+        return f"TOOL_ERROR: {str(e)}"
 
 
 # ------------------------------------------------
@@ -131,7 +131,7 @@ def fetch_website(domain: str) -> str:
         r = requests.get(f"https://{domain}", timeout=10)
         return r.text[:5000]
     except Exception as e:
-        return str(e)
+        return f"TOOL_ERROR: {str(e)}"
 
 
 # ------------------------------------------------
@@ -176,7 +176,7 @@ def security_headers(domain: str) -> str:
         return str(results)
 
     except Exception as e:
-        return str(e)
+        return f"TOOL_ERROR: {str(e)}"
 
 
 # ------------------------------------------------
@@ -230,7 +230,7 @@ def extract_metadata(domain: str) -> str:
             """
 
     except Exception as e:
-        return str(e)
+        return f"TOOL_ERROR: {str(e)}"
 
 
 # ------------------------------------------------
@@ -264,7 +264,7 @@ def detect_tech_stack(domain: str) -> str:
         return f"Technologies: {list(tech)}"
 
     except Exception as e:
-        return str(e)
+        return f"TOOL_ERROR: {str(e)}"
 
 
 # ------------------------------------------------
@@ -309,7 +309,7 @@ def analyze_ssl_certificate(domain: str) -> str:
             """
 
     except Exception as e:
-        return str(e)
+        return f"TOOL_ERROR: {str(e)}"
 
 
 # ------------------------------------------------
@@ -374,7 +374,7 @@ def crawl_website(domain: str) -> str:
             """
 
     except Exception as e:
-        return str(e)
+        return f"TOOL_ERROR: {str(e)}"
 
 
 # ------------------------------------------------
@@ -407,7 +407,7 @@ def analyze_robots(domain: str) -> str:
         return r.text[:2000]
 
     except Exception as e:
-        return str(e)
+        return f"TOOL_ERROR: {str(e)}"
 
 
 # ------------------------------------------------
@@ -440,7 +440,7 @@ def analyze_sitemap(domain: str) -> str:
         return r.text[:2000]
 
     except Exception as e:
-        return str(e)
+        return f"TOOL_ERROR: {str(e)}"
 
 
 # ------------------------------------------------
@@ -483,7 +483,7 @@ def measure_performance(domain: str) -> str:
                 """
 
     except Exception as e:
-        return str(e)
+        return f"TOOL_ERROR: {str(e)}"
 
 
 # ------------------------------------------------

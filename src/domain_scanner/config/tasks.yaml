@@ -23,6 +23,7 @@ reconnaissance_task:
     6. Observed exposed services or infrastructure indicators
 
   agent: recon_agent
+  async_execution: true
 
 
 tech_stack_analysis_task:
@@ -107,6 +108,8 @@ security_analysis_task:
     - reconnaissance_task
     - tech_stack_analysis_task
     - infrastructure_analysis_task
+    
+  async_execution: true
 
 
 performance_analysis_task:
@@ -156,6 +159,7 @@ website_content_analysis_task:
     3. Metadata (title, description, keywords)
     4. Notes about site structure (e.g., sections, navigation)
   agent: website_content_agent
+  async_execution: true
 
 
 ux_ui_analysis_task:

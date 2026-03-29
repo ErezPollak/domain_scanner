@@ -38,7 +38,7 @@ def test_dns_lookup_success(mock_socket_gethostbyname):
 def test_dns_lookup_failure(mock_socket_gethostbyname):
     mock_socket_gethostbyname.side_effect = Exception("Not found")
     result = dns_lookup.func("invalid.domain")
-    assert result == "Not found"
+    assert result == "TOOL_ERROR: Not found"
 
 # --- discover_subdomains ---
 def test_discover_subdomains_success(mock_socket_gethostbyname):
