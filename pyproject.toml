@@ -9,7 +9,6 @@ dependencies = [
     "litellm>=1.82.5",
     "dnspython>=2.8.0",
     "wappalyzer>=1.0.20",
-    "pip>=26.0.1",
     "py-spy>=0.4.1",
 ]
 
