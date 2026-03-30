@@ -11,59 +11,63 @@ def get_target_domain():
     return os.getenv("TARGET_DOMAIN", "example.com")
 
 
-def run():
+async def run():
     """
     Run the crew.
     """
     inputs = {"domain": get_target_domain()}
 
     try:
-        DomainScanner().crew().kickoff(inputs=inputs)
+        await DomainScanner().crew().akickoff(inputs=inputs)
     except Exception as e:
         raise Exception(f"An error occurred while running the crew: {e}")
 
 
-def train():
+async def train():
     """
     Train the crew for a given number of iterations.
     """
     inputs = {"domain": get_target_domain()}
     try:
-        DomainScanner().crew().train(
-            n_iterations=int(sys.argv[1]), filename=sys.argv[2], inputs=inputs
+        await (
+            DomainScanner()
+            .crew()
+            .atrain(n_iterations=int(sys.argv[1]), filename=sys.argv[2], inputs=inputs)
         )
 
     except Exception as e:
         raise Exception(f"An error occurred while training the crew: {e}")
 
 
-def replay():
+async def replay():
     """
     Replay the crew execution from a specific task.
     """
     try:
-        DomainScanner().crew().replay(task_id=sys.argv[1])
+        await DomainScanner().crew().areplay(task_id=sys.argv[1])
 
     except Exception as e:
         raise Exception(f"An error occurred while replaying the crew: {e}")
 
 
-def test():
+async def test():
     """
     Test the crew execution and returns the results.
     """
     inputs = {"domain": get_target_domain()}
 
     try:
-        DomainScanner().crew().test(
-            n_iterations=int(sys.argv[1]), eval_llm=sys.argv[2], inputs=inputs
+        await (
+            DomainScanner()
+            .crew()
+            .atest(n_iterations=int(sys.argv[1]), eval_llm=sys.argv[2], inputs=inputs)
         )
 
     except Exception as e:
         raise Exception(f"An error occurred while testing the crew: {e}")
 
 
-def run_with_trigger():
+async def run_with_trigger():
     """
     Run the crew with trigger payload.
     """
@@ -85,7 +89,7 @@ def run_with_trigger():
     }
 
     try:
-        result = DomainScanner().crew().kickoff(inputs=inputs)
+        result = await DomainScanner().crew().akickoff(inputs=inputs)
         return result
     except Exception as e:
         raise Exception(f"An error occurred while running the crew with trigger: {e}")

@@ -1,4 +1,5 @@
 import argparse
+import asyncio
 from domain_scanner.crew import DomainScanner
 
 
@@ -30,7 +31,7 @@ def main():
         scanner = DomainScanner()
 
         # Execute the AI agent workflow
-        scanner.crew().kickoff(inputs=inputs)
+        asyncio.run(scanner.crew().akickoff(inputs=inputs))
 
         print(
             f"\n✅ Scan completed! Check the 'reports' directory for '{args.domain}_report.md'."

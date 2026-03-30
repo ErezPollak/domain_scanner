@@ -3,7 +3,7 @@ name = "domain_scanner"
 version = "0.1.0"
 description = "domain_scanner using crewAI"
 authors = [{ name = "Your Name", email = "you@example.com" }]
-requires-python = ">=3.10,<3.14"
+requires-python = ">=3.13"
 dependencies = [
     "crewai==1.11.0",
     "litellm>=1.82.5",
@@ -13,8 +13,6 @@ dependencies = [
 ]
 
 [project.scripts]
-domain_scanner = "domain_scanner.main:run"
-run_crew = "domain_scanner.main:run"
 scan = "domain_scanner.cli:main"
 train = "domain_scanner.main:train"
 replay = "domain_scanner.main:replay"
